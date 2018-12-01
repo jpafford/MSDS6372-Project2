@@ -1,0 +1,24 @@
+*Check frequency of Math_Pass in Train and Test*;
+proc freq data=EDU_train;
+table Math_Pass;
+run;
+
+proc freq data=EDU_test;
+table Math_Pass;
+run;
+
+*Discriminant Analysis*;
+proc discrim data=EDU_train outstat=discrim pool=yes;
+class Math_Pass;
+var Number_Discipline_Incidents ELA_Avg;
+run;
+
+*Validate the 'claim'*;
+proc discrim data=EDU_train pool=yes TESTDATA=EDU_test TESTout=Validate;
+class Math_Pass;
+var Number_Discipline_Incidents ELA_Avg;
+run;
+
+*Print 'Validate' to see where the model was wrong*;
+proc print data=Validate;
+run;
